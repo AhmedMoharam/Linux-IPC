@@ -1,0 +1,8 @@
+Important notes:
+1. SERVER: create socket -> create own address struct and fill it (shared server address) ->  bind it -> receive data alongside with client address (save it)
+    -> you can send to client saved address.
+    CLIENT: create socket -> create server address struct and fill it (shared server address) -> send data to it
+2. IN CASE OF DGRAM with AF_INET, you send by ip address, so no kernel bind for client is required, so you need to only bind server, to get
+    the data over it along side with the sender`s address then resend over that address and the client will recieve it. when you sendto client
+    from server, kerenl automatically do implcit binding for client, that couldn`t be done in case of AF_LINUX because comm is file based and new file address
+    should be spicified for client (i guess).

@@ -1,0 +1,10 @@
+Important notes:
+1. shared memory and syncing with file is a uni-directional. means if you typed a content to shm, it will be mapped to the file.
+    if you typed contnent to file, it will (((not))) be mapped to the shared memory.
+2. in order to use this feature syncing with a file on the files system, call mmap ( ..., fd, offset) and make sure, you are not 
+    using MAP_ANONYMOUS inside flags.
+3. in order to make this work, you need the size of the file to be larger than or equal to the size of the allocated shared memory
+    you can do this using ftruncate(fd, size)
+4. since syncing with the file is uni-directional, you cannot use this method as a strong IPC mechanism between two processes, so you need
+    to use the previous mechanism (shm_anonymous) with fork and in this case the mapped file is used as an observer.
+5. In this example, i am showing that syncing with file is uni-directional.

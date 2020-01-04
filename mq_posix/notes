@@ -1,0 +1,22 @@
+Important notes:
+1. to create/open mqueue use:
+    mqd_t mq_open(const char *name, int oflag);
+    mqd_t mq_open(const char *name, int oflag, mode_t mode,struct mq_attr *attr);
+    * if you are creating a new queue, you must use second API, i.e must specify creating permission "mode" and mqueue attributes.
+    * the name must contain only one slash and no less or you will get error EACCES.
+    * mq_open is not blocking like open for FIFO, and using O_NONBLOCK is not related to mq_open.
+    * specifing O_NONBLOCK when creating mqueue at mq_open affects mq_receive and mq_send to be blocking (default) or not.
+    * if you are creating mqueue exclusively and it already exsists, you get error EEXIST.
+2. to receive messages use:
+    ssize_t mq_receive(mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned int *msg_prio);
+    * The msg_len must be greater than or equal to the mq_msgsize attribute of the queue, but the message`s length we receive usually is less.
+3. to send messages use:
+    int mq_send(mqd_t mqdes, const char *msg_ptr,size_t msg_len, unsigned int msg_prio);
+    * if you send message with length > mq_msgsize, you will get error EMSGSIZE.
+4. you can mount and observe some info about the messgaes using:
+    #mkdir /dev/mqueue
+    #mount -t mqueue none /dev/mqueue
+    #ls /dev/mqueue
+    mymq
+    #cat /dev/mqueue/mymq
+    QSIZE:129   NOTIFY:0    SIGNO:0     NOTIFY_PID:0000

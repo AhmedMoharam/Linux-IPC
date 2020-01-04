@@ -1,0 +1,16 @@
+Important notes:
+1. Anonymous shared memory is done through creating a shared memory then fork so both child and parent know address of the shared memory.
+    a. this is done through calling mmap with flags "MAP_ANONYMOUS  | MAP_SHARED".
+    b. the recommended way to access the shared memory is to define a structure and mmap with size of that structure,
+    then reinterpret cast the returned pointer (for simplicity, you can normal cast each time you access a field) 
+    and access the memory with the fields of the structure.
+    c. use munmap after finishing.
+2. since we are using fork and Anonymous shared memory, we can use Anonymous (unnamed) semaphores, to syncronizing between read/write to
+the shared memory.
+    a. usually semaphores are used with shared memory, lock is used with shared files.
+    b. we will use a semaphore to control write and another to control read, and initialize wsem with 1, so write will start first 
+    and wait(wsem) will not block since wsem is 1, then it decresses the wsem ad after write operation is done it allows rsem to start
+    by post(rsem), so read process can proceed and wait(rsem) will no more block the read process and while it reads, write process is
+    waiting on wait(wsem) which still blocks untill read process finishes and post it(post, ++) (wait, blocks untill it is nonzero then --), and so on.
+    c. specially with un-named semaphores, we use sem_init and sem_destroy.
+

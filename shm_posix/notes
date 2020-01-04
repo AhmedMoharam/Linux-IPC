@@ -1,0 +1,12 @@
+Important notes:
+1. posix shared memory idea is to create a kernel posix shared memory object at server and open it from client with same name using shm_open().
+2. after creation at server you call mmap and add the shm_object file descriptor to mmap (....,fd,offset), at client side you call same mmap 
+    and send the same existing fd of shm_object, with same size and you will get another shared memory pointer (client`s shared memory).
+3. the idea is, any thing written to first shared memory will be mapped to shm_object, and since client also syncs with shm_object and this time
+    the mapping is bi-directional any modifications to shm_object will be mapped to the client shared memory.
+4. read/write sycronization between both client and server over shared memory is done through un-named semaphores existing in both shared memories.
+5. reinterpret cast of the void * pointer to the allocated memory makes you able to access the block of memory as structure of fields and act with those
+ fields. like treating semaphores as a block of data that you can access, init, modify and share.
+6. if you are opening shm_object with option O_RDONLY, then mmap should be use ((only)) PROT_READ.
+7. note that the shared memory address in process A is not equal shared memory address of Process B. 
+ since addresses returned by mmap for each process are virtual addresses so they are different, but actually both exist on same physical memory locatin.

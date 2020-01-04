@@ -1,0 +1,1 @@
+#define FIFO_PATH  "/tmp/mfifo"

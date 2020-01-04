@@ -1,0 +1,9 @@
+Important notes:
+1. IN CASE OF DGRAM with AF_UNIX in order to sendto some sockaddr struct, that sockaddr struct needs to be bound using bind.
+    so if you want to send to client from server also client needs to be bound, so you bind both client and server.
+    if you didn`t bind client, you can send to server (server is bound) but when you try to send from server, tou get error ENOTCONN.
+    as you bind both client and server, linux will create file for both , the pathes need to be different.
+2. IN CASE OF DGRAM with AF_INET, you send by ip address, so no kernel bind for client is required, so you need to only bind server, to get
+    the data over it along side with the sender`s address then resend over that address and the client will recieve it.
+3. SERVER: socket -> bind -> receive_from (gets client bound address)-> sendto (cleint address)
+    CLIENT(have server address): socket ->bind ->  sendto(server know address) -> receive_from (any)

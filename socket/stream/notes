@@ -1,0 +1,8 @@
+Important notes:
+1. in case of  closing client socket file decriptor,then reading from server:
+    read will be nonblocking and read cnt is zero which means EOF.
+    so you should close that client file descriptor, or never read from it.
+2. select() could be used to capture if there is available data to be read on a fd inside fd_set
+    i.e read will be non-blocking on the FD_ISSET on the corresponding fd.
+    also on the above case select will return and the closed client fd will be TRUE FD_ISSET
+    since read on it is nonblocking. 

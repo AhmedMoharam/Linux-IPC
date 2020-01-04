@@ -1,0 +1,8 @@
+Important notes:
+1. open() is a blocking command when opening a FIFO. it can be unblocking by O_NONBLOCK.
+    opening a FIFO is blocking untill the fifo is opened from a process A for read and process B for write.
+2. when fifo descriptor is closed using close() the process that reads from the fifo will recieve EOF
+    hence read() will return 0.
+3. when calling read() with huge count, it will try to read that count untill it gets EOF.
+4. FIFO is created using mkfifo().
+5. FIFO is deleted from fs using unlink.

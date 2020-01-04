@@ -1,0 +1,22 @@
+Important notes:
+1. opening un-named pipe is done through pipe(pipeid[2]), it return in and out descriptor of the pipe.
+2. processes knowing the in and out values of the pipe can send and receive data through it.
+3. pipe is actually a buffer or queue in the kernel, you can send and receive data through descriptors.
+4. in order to use pipe with two processes, you need to create the pipe first then call fork() to create two processes
+    sharing the pipe descriptors.
+5. close pipe out from process A, so A can send only to the pipe.
+6. close pipe in from process B, so B can receive only from the pipe.
+7. then simply read and write using proper process.
+8. read used with pipe is a blocking function which means it will stay trying to read from the pipe till it receive some values,
+or receive EOF , or it gets an error. to make it nonblocking, open pipe with O_NONBLOCK.
+9. closing pipefd[1] write descriptor means EOF to the reader of pipe.
+10.
+ /*
+    stdin   0
+    stdout  1
+    stderr  2
+    parent           child 
+    fd[1]-->[PIPE]-->fd[0]
+    processIn from pipe out fd[0]  == read from fd[0]
+    processOut to pipe in fd[1]    == write to fd[1]
+*/
